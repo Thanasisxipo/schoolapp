@@ -1,0 +1,9 @@
+package gr.aueb.cf.schoolapp.dao.exceptions;
+
+public class StudentDAOException extends Exception {
+    private static final long serialVersionUID = 146L;
+
+    public StudentDAOException(String s) {
+        super(s);
+    }
+}

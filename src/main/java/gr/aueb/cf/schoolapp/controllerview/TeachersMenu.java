@@ -66,6 +66,8 @@ public class TeachersMenu extends JFrame {
 		JButton searchBtn = new JButton("Αναζήτηση");
 		searchBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Main.getAdminUpdateDeleteStudentsForm().setVisible(true);
+				Main.getTeachersMenu().setEnabled(false);
 			}
 		});
 		searchBtn.setForeground(new Color(0, 0, 255));

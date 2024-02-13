@@ -123,7 +123,7 @@ public class AdminInsertTeachersForm extends JFrame {
 		specialityComboBox.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				String sql = "SELECT * FROM CITIES";
+				String sql = "SELECT * FROM SPECIALITIES";
 				
 			    try (Connection connection = DBUtil.getConnection();
 			    		PreparedStatement ps = connection.prepareStatement(sql);

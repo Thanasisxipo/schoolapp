@@ -380,8 +380,8 @@ public class AdminUpdateDeleteTeachersForm extends JFrame {
 					dto.setFirstname(firstname);
 					dto.setLastname(lastname);
 					dto.setSsn(ssn);
-					dto.setSpeciality(specialities.get(specialityId));
-					dto.setUsername(usernames.get(usernameId));
+					dto.setSpecialityId(specialityId);
+					dto.setUsernameId(usernameId);
 					Teacher teacher =teacherService.updateTeacher(dto);
 					JOptionPane.showMessageDialog(null, "Teacher "
 							+ " was updated", "UPDATE", JOptionPane.PLAIN_MESSAGE);

@@ -85,86 +85,79 @@ public class AdminUpdateDeleteStudentsForm extends JFrame {
 			public void windowActivated(WindowEvent e) {
 
 				try  {
-					students = studentService.getStudentByLastname(Main.getStudentsMenu().getLastname());
-					listPosition = 0;
-					listSize = students.size();
+						students = studentService.getStudentByLastname(Main.getStudentsMenu().getLastname());
+						listPosition = 0;
+						listSize = students.size();
 
-					if (listSize == 0) {
-						firstnameTxt.setText("");
-						lastnameTxt.setText("");
-						maleRdBtn.setSelected(true);
-						birthDateTxt.setText("");
-						cityComboBox.setSelectedItem(null);
-						usernameComboBox.setSelectedItem(null);
-					}
+						if (listSize == 0) {
+							idTxt.setText("");
+							firstnameTxt.setText("");
+							lastnameTxt.setText("");
+							maleRdBtn.setSelected(true);
+							birthDateTxt.setText("");
+							cityComboBox.setSelectedItem(null);
+							usernameComboBox.setSelectedItem(null);
+						}
+						PreparedStatement psCities;
+						ResultSet rsCities;
+						try(Connection conn = DBUtil.getConnection()) {
 
-					} catch (StudentDAOException e1) {
+						String sqlCities = "SELECT * FROM CITIES";
+						psCities = conn.prepareStatement(sqlCities);
+						rsCities = psCities.executeQuery();
+						cities = new HashMap<>();
+						citiesModel = new DefaultComboBoxModel<>();
+
+						while (rsCities.next()) {
+							String city = rsCities.getString("CITY");
+							int id = rsCities.getInt("ID");
+							cities.put(id, city);
+							citiesModel.addElement(city);
+						}
+						cityComboBox.setModel(citiesModel);
+						cityComboBox.setMaximumRowCount(5);
+
+						} catch (SQLException e1) {
+						e1.printStackTrace();
+						}
+
+
+						PreparedStatement psUsers;
+						ResultSet rsUsers;
+						try (Connection conn = DBUtil.getConnection()) {
+								String sqlUsers = "SELECT ID, USERNAME FROM USERS";
+								psUsers = conn.prepareStatement(sqlUsers);
+								rsUsers = psUsers.executeQuery(sqlUsers);
+							usernames = new HashMap<>();
+							usernamesModel = new DefaultComboBoxModel<>();
+
+							while (rsUsers.next()) {
+								String username = rsUsers.getString("USERNAME");
+								int id = rsUsers.getInt("ID");
+								usernames.put(id, username);
+								usernamesModel.addElement(username);
+							}
+							usernameComboBox.setModel(usernamesModel);
+							usernameComboBox.setMaximumRowCount(5);
+
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+
+								idTxt.setText(Integer.toString(students.get(listPosition).getId()));
+							firstnameTxt.setText(students.get(listPosition).getFirstname());
+							lastnameTxt.setText(students.get(listPosition).getLastname());
+							if (students.get(listPosition).getGender().equals("M")) {
+								maleRdBtn.setSelected(true);
+							} else {
+								femaleRdBtn.setSelected(true);
+							}
+							birthDateTxt.setText(DateUtil.toString(students.get(listPosition).getBirthDate()));
+							cityComboBox.setSelectedItem(cities.get(students.get(listPosition).getCityId()));
+							usernameComboBox.setSelectedItem(usernames.get(students.get(listPosition).getUserId()));
+				} catch (StudentDAOException e1) {
 					String message = e1.getMessage();
 					JOptionPane.showMessageDialog(null, message, "Error in getting studentr", JOptionPane.ERROR_MESSAGE);
-					}
-
-
-
-                PreparedStatement psCities;
-				ResultSet rsCities;
-			    try(Connection conn = DBUtil.getConnection()) {
-
-			    	String sqlCities = "SELECT * FROM CITIES";
-			    	psCities = conn.prepareStatement(sqlCities);
-		    		rsCities = psCities.executeQuery();
-			    	cities = new HashMap<>();
-			    	citiesModel = new DefaultComboBoxModel<>();
-			    	
-			    	while (rsCities.next()) {
-			    		String city = rsCities.getString("CITY");
-			    		int id = rsCities.getInt("ID");
-			    		cities.put(id, city);
-			    		citiesModel.addElement(city);
-			    	}
-			    	cityComboBox.setModel(citiesModel);
-			    	cityComboBox.setMaximumRowCount(5);
-			    	
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-			    
-			  
-			    PreparedStatement psUsers;
-			    ResultSet rsUsers;
-			    try (Connection conn = DBUtil.getConnection()) {
-			    	    String sqlUsers = "SELECT ID, USERNAME FROM USERS";
-					    psUsers = conn.prepareStatement(sqlUsers);
-			    		rsUsers = psUsers.executeQuery(sqlUsers);
-			    	usernames = new HashMap<>();
-			    	usernamesModel = new DefaultComboBoxModel<>();
-			    	
-			    	while (rsUsers.next()) {
-			    		String username = rsUsers.getString("USERNAME");
-			    		int id = rsUsers.getInt("ID");
-			    		usernames.put(id, username);
-			    		usernamesModel.addElement(username);
-			    	}
-					usernameComboBox.setModel(usernamesModel);
-					usernameComboBox.setMaximumRowCount(5);
-			    	
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-			    
-			    try {
-					idTxt.setText(Integer.toString(rs.getInt("ID")));
-					firstnameTxt.setText(rs.getString("FIRSTNAME"));
-					lastnameTxt.setText(rs.getString("LASTNAME"));
-					if (rs.getString("GENDER").equals("M")) {
-						maleRdBtn.setSelected(true);
-					} else {
-						femaleRdBtn.setSelected(true);
-					}
-					birthDateTxt.setText(DateUtil.toSQLDateString(rs.getDate("BIRTH_DATE")));
-					cityComboBox.setSelectedItem(cities.get(rs.getInt("CITY_ID")));
-					usernameComboBox.setSelectedItem(usernames.get(rs.getInt("USER_ID")));
-				} catch (SQLException e1) {
-					e1.printStackTrace();
 				}
 			}
 		});
@@ -247,8 +240,34 @@ public class AdminUpdateDeleteStudentsForm extends JFrame {
 		cityLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
 		cityLbl.setBounds(67, 238, 42, 14);
 		contentPane.add(cityLbl);
-		
 
+		cityComboBox.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+
+				String sql = "SELECT * FROM CITIES";
+
+				try (Connection connection = DBUtil.getConnection();
+					 PreparedStatement ps = connection.prepareStatement(sql);
+					 ResultSet rs = ps.executeQuery()) {
+					cities = new HashMap<>();
+					citiesModel = new DefaultComboBoxModel<>();
+
+					while (rs.next()) {
+						String city = rs.getString("CITY");
+						int id = rs.getInt("ID");
+						cities.put(id, city);
+						citiesModel.addElement(city);
+					}
+					cityComboBox.setModel(citiesModel);
+					cityComboBox.setMaximumRowCount(5);
+
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
 		cityComboBox.setBounds(124, 235, 173, 22);
 		contentPane.add(cityComboBox);
 		
@@ -257,6 +276,34 @@ public class AdminUpdateDeleteStudentsForm extends JFrame {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblNewLabel_1.setBounds(38, 279, 71, 14);
 		contentPane.add(lblNewLabel_1);
+
+		usernameComboBox.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+
+				String sql = "SELECT ID, USERNAME FROM USERS";
+
+				try (Connection connection = DBUtil.getConnection();
+					 PreparedStatement ps = connection.prepareStatement(sql);
+					 ResultSet rs = ps.executeQuery(sql)) {
+					usernames = new HashMap<>();
+					usernamesModel = new DefaultComboBoxModel<>();
+
+					while (rs.next()) {
+						String username = rs.getString("USERNAME");
+						int id = rs.getInt("ID");
+						usernames.put(id, username);
+						usernamesModel.addElement(username);
+					}
+					usernameComboBox.setModel(usernamesModel);
+					usernameComboBox.setMaximumRowCount(5);
+
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
 		usernameComboBox.setBounds(124, 275, 173, 22);
 		contentPane.add(usernameComboBox);
 		
@@ -266,22 +313,20 @@ public class AdminUpdateDeleteStudentsForm extends JFrame {
 		firstBtn.setIcon(icon);
 		firstBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					if (rs.first()) {
-						idTxt.setText(Integer.toString(rs.getInt("ID")));
-						firstnameTxt.setText(rs.getString("FIRSTNAME"));
-						lastnameTxt.setText(rs.getString("LASTNAME"));
-						if (rs.getString("GENDER").equals("M")) {
-							maleRdBtn.setSelected(true);
-						} else {
-							femaleRdBtn.setSelected(true);
-						}
-						birthDateTxt.setText(DateUtil.toSQLDateString(rs.getDate("BIRTH_DATE")));
-						cityComboBox.setSelectedItem(cities.get(rs.getInt("CITY_ID")));
-						usernameComboBox.setSelectedItem(usernames.get(rs.getInt("USER_ID")));
+				if (listSize > 0) {
+					listPosition = 0;
+
+					idTxt.setText(String.format("%s", students.get(listPosition).getId()));
+					firstnameTxt.setText(students.get(listPosition).getFirstname());
+					lastnameTxt.setText(students.get(listPosition).getLastname());
+					if (students.get(listPosition).getGender().equals("M")) {
+						maleRdBtn.setSelected(true);
+					} else {
+						femaleRdBtn.setSelected(true);
 					}
-				} catch (SQLException e1) {
-					e1.printStackTrace();
+					birthDateTxt.setText(DateUtil.toString(students.get(listPosition).getBirthDate()));
+					cityComboBox.setSelectedItem(cities.get(students.get(listPosition).getCityId()));
+					usernameComboBox.setSelectedItem(usernames.get(students.get(listPosition).getUserId()));
 				}
 			}
 		});
@@ -295,24 +340,19 @@ public class AdminUpdateDeleteStudentsForm extends JFrame {
 		prevBtn.setIcon(icon2);
 		prevBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					if (rs.previous()) {
-						idTxt.setText(Integer.toString(rs.getInt("ID")));
-						firstnameTxt.setText(rs.getString("FIRSTNAME"));
-						lastnameTxt.setText(rs.getString("LASTNAME"));
-						if (rs.getString("GENDER").equals("M")) {
-							maleRdBtn.setSelected(true);
-						} else {
-							femaleRdBtn.setSelected(true);
-						}
-						birthDateTxt.setText(DateUtil.toSQLDateString(rs.getDate("BIRTH_DATE")));
-						cityComboBox.setSelectedItem(cities.get(rs.getInt("CITY_ID")));
-						usernameComboBox.setSelectedItem(usernames.get(rs.getInt("USER_ID")));
+				if (listPosition > 0) {
+					listPosition--;
+					idTxt.setText(String.format("%s", students.get(listPosition).getId()));
+					firstnameTxt.setText(students.get(listPosition).getFirstname());
+					lastnameTxt.setText(students.get(listPosition).getLastname());
+					if (students.get(listPosition).getGender().equals("M")) {
+						maleRdBtn.setSelected(true);
 					} else {
-						rs.first();
+						femaleRdBtn.setSelected(true);
 					}
-				} catch (SQLException e1) {
-					e1.printStackTrace();
+					birthDateTxt.setText(DateUtil.toString(students.get(listPosition).getBirthDate()));
+					cityComboBox.setSelectedItem(cities.get(students.get(listPosition).getCityId()));
+					usernameComboBox.setSelectedItem(usernames.get(students.get(listPosition).getUserId()));
 				}
 			}
 		});
@@ -326,24 +366,19 @@ public class AdminUpdateDeleteStudentsForm extends JFrame {
 		nextBtn.setIcon(iconnext);
 		nextBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					if (rs.next()) {
-						idTxt.setText(Integer.toString(rs.getInt("ID")));
-						firstnameTxt.setText(rs.getString("FIRSTNAME"));
-						lastnameTxt.setText(rs.getString("LASTNAME"));
-						if (rs.getString("GENDER").equals("M")) {
-							maleRdBtn.setSelected(true);
-						} else {
-							femaleRdBtn.setSelected(true);
-						}
-						birthDateTxt.setText(DateUtil.toSQLDateString(rs.getDate("BIRTH_DATE")));
-						cityComboBox.setSelectedItem(cities.get(rs.getInt("CITY_ID")));
-						usernameComboBox.setSelectedItem(usernames.get(rs.getInt("USER_ID")));
+				if (listPosition <= listSize - 2) {
+					listPosition++;
+					idTxt.setText(String.format("%s", students.get(listPosition).getId()));
+					firstnameTxt.setText(students.get(listPosition).getFirstname());
+					lastnameTxt.setText(students.get(listPosition).getLastname());
+					if (students.get(listPosition).getGender().equals("M")) {
+						maleRdBtn.setSelected(true);
 					} else {
-						rs.last();
+						femaleRdBtn.setSelected(true);
 					}
-				} catch (SQLException e1) {
-					e1.printStackTrace();
+					birthDateTxt.setText(DateUtil.toString(students.get(listPosition).getBirthDate()));
+					cityComboBox.setSelectedItem(cities.get(students.get(listPosition).getCityId()));
+					usernameComboBox.setSelectedItem(usernames.get(students.get(listPosition).getUserId()));
 				}
 			}
 		});
@@ -357,22 +392,19 @@ public class AdminUpdateDeleteStudentsForm extends JFrame {
 		lastBtn.setIcon(iconlast);
 		lastBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					if (rs.last()) {
-						idTxt.setText(Integer.toString(rs.getInt("ID")));
-						firstnameTxt.setText(rs.getString("FIRSTNAME"));
-						lastnameTxt.setText(rs.getString("LASTNAME"));
-						if (rs.getString("GENDER").equals("M")) {
-							maleRdBtn.setSelected(true);
-						} else {
-							femaleRdBtn.setSelected(true);
-						}
-						birthDateTxt.setText(DateUtil.toSQLDateString(rs.getDate("BIRTH_DATE")));
-						cityComboBox.setSelectedItem(cities.get(rs.getInt("CITY_ID")));
-						usernameComboBox.setSelectedItem(usernames.get(rs.getInt("USER_ID")));
+				if (listSize > 0) {
+					listPosition = listSize - 1;
+					idTxt.setText(String.format("%s", students.get(listPosition).getId()));
+					firstnameTxt.setText(students.get(listPosition).getFirstname());
+					lastnameTxt.setText(students.get(listPosition).getLastname());
+					if (students.get(listPosition).getGender().equals("M")) {
+						maleRdBtn.setSelected(true);
+					} else {
+						femaleRdBtn.setSelected(true);
 					}
-				} catch (SQLException e1) {
-					e1.printStackTrace();
+					birthDateTxt.setText(DateUtil.toString(students.get(listPosition).getBirthDate()));
+					cityComboBox.setSelectedItem(cities.get(students.get(listPosition).getCityId()));
+					usernameComboBox.setSelectedItem(usernames.get(students.get(listPosition).getUserId()));
 				}
 			}
 		});
@@ -431,27 +463,35 @@ public class AdminUpdateDeleteStudentsForm extends JFrame {
 		JButton updateBtn = new JButton("Ενημέρωση");
 		updateBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				StudentUpdateDTO dto;
+//				if (buttonGroup.getSelection() == null || cityComboBox.getSelectedItem() == null
+//						|| usernameComboBox.getSelectedItem() == null) {
+//					JOptionPane.showMessageDialog(null, "Please select gender / city / username", "Gender", JOptionPane.ERROR_MESSAGE);
+//					return;
+//				}
 				String id = idTxt.getText();
 				String firstname = firstnameTxt.getText().trim();
 				String lastname = lastnameTxt.getText().trim();
 				String gender = buttonGroup.getSelection().getActionCommand();
 				String birthdate = birthDateTxt.getText().trim();
-				int cityId = (Integer) cityComboBox.getSelectedItem();
+				int cityId =  (Integer) cityComboBox.getSelectedItem();
 				int usernameId = (Integer) usernameComboBox.getSelectedItem();
+
 
 				if (lastname.equals("") || firstname.equals("") || id.equals("")) {
 					JOptionPane.showMessageDialog(null, "Not valid input", "UPDATE ERROR", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				try {
-					StudentUpdateDTO dto = new StudentUpdateDTO();
+
+					dto = new StudentUpdateDTO();
 					dto.setId(Integer.parseInt(id));
 					dto.setFirstname(firstname);
 					dto.setLastname(lastname);
 					dto.setBirthDate(birthdate);
 					dto.setGender(gender);
-					dto.setCity(cities.get(cityId));
-					dto.setUsername(usernames.get(usernameId));
+					dto.setCityId(cityId);
+					dto.setUsernameId(usernameId);
 					Student student =studentService.updateStudent(dto);
 					JOptionPane.showMessageDialog(null, "Student "
 							+ " was updated", "UPDATE", JOptionPane.PLAIN_MESSAGE);

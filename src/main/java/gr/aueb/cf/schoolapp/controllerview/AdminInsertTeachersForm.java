@@ -201,6 +201,8 @@ public class AdminInsertTeachersForm extends JFrame {
 					String ssn = ssnTxt.getText();
 					String speciality = (String) specialityComboBox.getSelectedItem();
 					String username = (String) usernameComboBox.getSelectedItem();
+					Integer specialiyId = specialities.get(speciality);
+					Integer usernameId = usernames.get(username);
 
 					if (firstname == "" || lastname == "" | ssn == "") {
 						JOptionPane.showMessageDialog(null, "Please fill firstname / lastname / ssn", "Basic info", JOptionPane.ERROR_MESSAGE);
@@ -211,8 +213,8 @@ public class AdminInsertTeachersForm extends JFrame {
 					dto.setFirstname(firstname);
 					dto.setLastname(lastname);
 					dto.setSsn(ssn);
-					dto.setSpeciality(speciality);
-					dto.setUsername(username);
+					dto.setSpecialityId(specialiyId);
+					dto.setUsernameId(usernameId);
 
 					Teacher teacher = teacherService.insertTeacher(dto);
 					JOptionPane.showMessageDialog(null, "Teacher" + teacher.getLastname()

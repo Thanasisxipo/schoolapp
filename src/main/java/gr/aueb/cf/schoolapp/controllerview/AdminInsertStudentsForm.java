@@ -224,7 +224,7 @@ public class AdminInsertStudentsForm extends JFrame {
 		JButton insertBtn = new JButton("Εισαγωγή");
 		insertBtn.addActionListener(new ActionListener()  {
 			public void actionPerformed(ActionEvent e) {
-				Map<String, String> studentErrors = new HashMap<>();
+//				Map<String, String> studentErrors = new HashMap<>();
 				StudentInsertDTO dto;
 				if (buttonGroup.getSelection() == null || cityComboBox.getSelectedItem() == null
 						|| usernameComboBox.getSelectedItem() == null) {
@@ -238,6 +238,8 @@ public class AdminInsertStudentsForm extends JFrame {
 					String birthDate = birthDateTxt.getText().trim();
 					String city = (String) cityComboBox.getSelectedItem();
 					String username = (String) usernameComboBox.getSelectedItem();
+					Integer cityId = cities.get(city);
+					Integer usernameId = usernames.get(username);
 
 					if (firstname == "" || lastname == "" || birthDate == "") {
 						JOptionPane.showMessageDialog(null, "Please fill firstname / lastname / birthdate", "Basic info", JOptionPane.ERROR_MESSAGE);
@@ -249,8 +251,8 @@ public class AdminInsertStudentsForm extends JFrame {
 					dto.setLastname(lastname);
 					dto.setBirthDate(birthDate);
 					dto.setGender(gender);
-					dto.setCity(city);
-					dto.setUsername(username);
+					dto.setCityId(cityId);
+					dto.setUsernameId(usernameId);
 
 
 					Student student = studentService.insertStudent(dto);

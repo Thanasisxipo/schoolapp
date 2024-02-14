@@ -5,19 +5,19 @@ public class StudentReadOnlyDTO extends BaseDTO {
     private String lastname;
     private String gender;
     private String birthDate;
-    private String city;
-    private String username;
+    private Integer cityId;
+    private Integer usernameId;
 
     public StudentReadOnlyDTO() {
     }
 
-    public StudentReadOnlyDTO(String firstname, String lastname, String gender, String birthDate, String city, String username) {
+    public StudentReadOnlyDTO(String firstname, String lastname, String gender, String birthDate, Integer cityId, Integer usernameId) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.gender = gender;
         this.birthDate = birthDate;
-        this.city = city;
-        this.username = username;
+        this.cityId = cityId;
+        this.usernameId = usernameId;
     }
 
     public String getFirstname() {
@@ -52,19 +52,19 @@ public class StudentReadOnlyDTO extends BaseDTO {
         this.birthDate = birthDate;
     }
 
-    public String getCity() {
-        return city;
+    public Integer getCityId() {
+        return cityId;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
     }
 
-    public String getUsername() {
-        return username;
+    public Integer getUsernameId() {
+        return usernameId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsernameId(Integer usernameId) {
+        this.usernameId = usernameId;
     }
 }

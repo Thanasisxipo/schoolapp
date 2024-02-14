@@ -4,18 +4,18 @@ public class TeacherInsertDTO extends BaseDTO {
     private String ssn;
     private String firstname;
     private String lastname;
-    private String speciality;
-    private String username;
+    private Integer specialityId;
+    private Integer usernameId;
 
     public TeacherInsertDTO() {
     }
 
-    public TeacherInsertDTO(String ssn, String firstname, String lastname, String speciality, String username) {
+    public TeacherInsertDTO(String ssn, String firstname, String lastname, Integer specialityId, Integer usernameId) {
         this.ssn = ssn;
         this.firstname = firstname;
         this.lastname = lastname;
-        this.speciality = speciality;
-        this.username = username;
+        this.specialityId = specialityId;
+        this.usernameId = usernameId;
     }
 
     public String getSsn() {
@@ -42,19 +42,19 @@ public class TeacherInsertDTO extends BaseDTO {
         this.lastname = lastname;
     }
 
-    public String getSpeciality() {
-        return speciality;
+    public Integer getSpecialityId() {
+        return specialityId;
     }
 
-    public void setSpeciality(String speciality) {
-        this.speciality = speciality;
+    public void setSpecialityId(Integer specialityId) {
+        this.specialityId = specialityId;
     }
 
-    public String getUsername() {
-        return username;
+    public Integer getUsernameId() {
+        return usernameId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsernameId(Integer usernameId) {
+        this.usernameId = usernameId;
     }
 }

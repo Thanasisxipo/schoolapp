@@ -7,7 +7,6 @@ import gr.aueb.cf.schoolapp.dao.exceptions.UserDAOException;
 import gr.aueb.cf.schoolapp.dto.TeacherInsertDTO;
 import gr.aueb.cf.schoolapp.dto.TeacherUpdateDTO;
 import gr.aueb.cf.schoolapp.model.Teacher;
-import gr.aueb.cf.schoolapp.model.User;
 import gr.aueb.cf.schoolapp.service.exceptions.TeacherNotFoundException;
 
 import java.util.ArrayList;
@@ -16,8 +15,7 @@ import java.util.Optional;
 
 public class TeacherServiceImpl implements ITeacherService {
     private final ITeacherDAO teacherDAO;
-    private final ISpecialityDAO specialityDAO = new SpecialityDAOImpl();
-    private final IUserDAO userDAO = new UserDAOImpl();
+
 
 
     public TeacherServiceImpl(ITeacherDAO teacherDAO) {
@@ -102,63 +100,63 @@ public class TeacherServiceImpl implements ITeacherService {
     }
 
     private Teacher map(TeacherInsertDTO dto) throws SpecialityDAOException, UserDAOException {
-            return new Teacher(null ,dto.getFirstname(), dto.getLastname(), Integer.parseInt(dto.getSsn()), specialityId(dto), userId(dto));
+            return new Teacher(null ,dto.getFirstname(), dto.getLastname(), Integer.parseInt(dto.getSsn()), dto.getSpecialityId(), dto.getUsernameId());
 
     }
 
     private Teacher map(TeacherUpdateDTO dto) throws SpecialityDAOException, UserDAOException {
-        return new Teacher(null ,dto.getFirstname(), dto.getLastname(), Integer.parseInt(dto.getSsn()), specialityId(dto), userId(dto));
+        return new Teacher(null ,dto.getFirstname(), dto.getLastname(), Integer.parseInt(dto.getSsn()), dto.getSpecialityId(), dto.getUsernameId());
     }
 
-    private Integer specialityId(TeacherInsertDTO dto) throws SpecialityDAOException {
-        String speciality = dto.getSpeciality();
-        int id = 0;
-        try {
-            id = specialityDAO.getByName(speciality).getId();
-        } catch (SpecialityDAOException e) {
-            e.printStackTrace();
-            throw e;
-        }
-        return id;
-    }
-
-    private Integer specialityId(TeacherUpdateDTO dto) throws SpecialityDAOException {
-        String speciality = dto.getSpeciality();
-        int id = 0;
-        try {
-            id = specialityDAO.getByName(speciality).getId();
-        } catch (SpecialityDAOException e) {
-            e.printStackTrace();
-            throw e;
-        }
-        return id;
-    }
-
-    private Integer userId(TeacherInsertDTO dto) throws UserDAOException {
-        String username = dto.getUsername();
-        List<User> users = userDAO.getByUsername(username);
-        try {
-            if (users.isEmpty()) {
-                return null;
-            }
-            return users.get(0).getId();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            throw e;
-        }
-    }
-
-    private Integer userId(TeacherUpdateDTO dto) throws UserDAOException {
-        String username = dto.getUsername();
-        List<User> users = userDAO.getByUsername(username);
-        try {
-            if (users.isEmpty()) {
-                return null;
-            }
-            return users.get(0).getId();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            throw e;
-        }
-    }
+//    private Integer specialityId(TeacherInsertDTO dto) throws SpecialityDAOException {
+//        Integer speciality = dto.getSpecialityId();
+//        int id = 0;
+//        try {
+//            id = specialityDAO.getByName(speciality).getId();
+//        } catch (SpecialityDAOException e) {
+//            e.printStackTrace();
+//            throw e;
+//        }
+//        return id;
+//    }
+//
+//    private Integer specialityId(TeacherUpdateDTO dto) throws SpecialityDAOException {
+//        String speciality = dto.getSpeciality();
+//        int id = 0;
+//        try {
+//            id = specialityDAO.getByName(speciality).getId();
+//        } catch (SpecialityDAOException e) {
+//            e.printStackTrace();
+//            throw e;
+//        }
+//        return id;
+//    }
+//
+//    private Integer userId(TeacherInsertDTO dto) throws UserDAOException {
+//        String username = dto.getUsername();
+//        List<User> users = userDAO.getByUsername(username);
+//        try {
+//            if (users.isEmpty()) {
+//                return null;
+//            }
+//            return users.get(0).getId();
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            throw e;
+//        }
+//    }
+//
+//    private Integer userId(TeacherUpdateDTO dto) throws UserDAOException {
+//        String username = dto.getUsername();
+//        List<User> users = userDAO.getByUsername(username);
+//        try {
+//            if (users.isEmpty()) {
+//                return null;
+//            }
+//            return users.get(0).getId();
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//            throw e;
+//        }
+//    }
 }

@@ -1,6 +1,7 @@
 package gr.aueb.cf.schoolapp.dto;
 
 public class StudentUpdateDTO extends BaseDTO {
+
     private String firstname;
     private String lastname;
     private String gender;

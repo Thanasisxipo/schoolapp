@@ -10,7 +10,7 @@ public class Main {
     private static AdminMenu adminMenu;
     private static TeachersMenu teachersMenu;
     private static AdminInsertStudentsForm adminInsertStudentsForm;
-    private static AdminInsertTeachersForm adminInsertTeacehrsForm;
+    private static AdminInsertTeachersForm adminInsertTeachersForm;
     private static AdminUpdateDeleteStudentsForm adminUpdateDeleteStudentsForm;
     private static AdminUpdateDeleteTeachersForm adminUpdateDeleteTeachersForm;
     private static StudentsMenu studentsMenu;
@@ -35,9 +35,9 @@ public class Main {
                     studentsMenu.setLocationRelativeTo(null);
                     studentsMenu.setVisible(false);
 
-                    adminInsertTeacehrsForm = new AdminInsertTeachersForm();
-                    adminInsertTeacehrsForm.setLocationRelativeTo(null);
-                    adminInsertTeacehrsForm.setVisible(false);
+                    adminInsertTeachersForm = new AdminInsertTeachersForm();
+                    adminInsertTeachersForm.setLocationRelativeTo(null);
+                    adminInsertTeachersForm.setVisible(false);
 
                     adminInsertStudentsForm = new AdminInsertStudentsForm();
                     adminInsertStudentsForm.setLocationRelativeTo(null);
@@ -77,8 +77,8 @@ public class Main {
         return studentsMenu;
     }
 
-    public static AdminInsertTeachersForm getAdminInsertTeacehrsForm() {
-        return adminInsertTeacehrsForm;
+    public static AdminInsertTeachersForm getAdminInsertTeachersForm() {
+        return adminInsertTeachersForm;
     }
 
     public static AdminUpdateDeleteStudentsForm getAdminUpdateDeleteStudentsForm() {

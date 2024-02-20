@@ -98,6 +98,7 @@ public class StudentsMenu extends JFrame {
 		closeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Main.getAdminMenu().setEnabled(true);
+				Main.getAdminMenu().setVisible(true);
 				Main.getStudentsMenu().setVisible(false);
 			}
 		});

@@ -46,11 +46,12 @@ public class AdminInsertTeachersForm extends JFrame {
 	private JLabel ssnLbl;
 	private JTextField ssnTxt;
 	private JLabel specialityLbl;
-	private JComboBox<String> specialityComboBox;
-	private JComboBox<String> usernameComboBox;
+	private JComboBox<String> specialityComboBox= new JComboBox<>();
+	private JComboBox<String> usernameComboBox= new JComboBox<>();
 	private Map<String, Integer> specialities;
 	private Map<String, Integer> usernames;
-	private DefaultComboBoxModel<String> model;
+	private DefaultComboBoxModel<String> specialiyModel;
+	private DefaultComboBoxModel<String> usernamesModel;
 
 	public AdminInsertTeachersForm() {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -117,35 +118,35 @@ public class AdminInsertTeachersForm extends JFrame {
 		specialityLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
 		specialityLbl.setBounds(39, 162, 76, 17);
 		contentPane.add(specialityLbl);
-		
-		specialityComboBox = new JComboBox<>();
-		
+
 		specialityComboBox.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
+
 				String sql = "SELECT * FROM SPECIALITIES";
-				
-			    try (Connection connection = DBUtil.getConnection();
-			    		PreparedStatement ps = connection.prepareStatement(sql);
-			    		ResultSet rs = ps.executeQuery()) {
-			    	specialities = new HashMap<>();
-			    	model = new DefaultComboBoxModel<>();
-			    	
-			    	while (rs.next()) {
-			    		String speciality = rs.getString("CITY");
-			    		int id = rs.getInt("ID");
-			    		specialities.put(speciality, id);
-			    		model.addElement(speciality);
-			    	}
-			    	specialityComboBox.setModel(model);
-			    	specialityComboBox.setMaximumRowCount(5);
-			    	
+
+				try (Connection connection = DBUtil.getConnection();
+					 PreparedStatement ps = connection.prepareStatement(sql);
+					 ResultSet rs = ps.executeQuery()) {
+					specialities = new HashMap<>();
+					specialiyModel = new DefaultComboBoxModel<>();
+
+					while (rs.next()) {
+						String speciality = rs.getString("SPECIALITY");
+						int id = rs.getInt("ID");
+						specialities.put(speciality, id);
+						specialiyModel.addElement(speciality);
+					}
+					specialityComboBox.setModel(specialiyModel);
+					specialityComboBox.setMaximumRowCount(5);
+
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
-				
+
 			}
 		});
+
 		specialityComboBox.setBounds(129, 162, 207, 20);
 		contentPane.add(specialityComboBox);
 		
@@ -155,31 +156,31 @@ public class AdminInsertTeachersForm extends JFrame {
 		usernameLbl.setBounds(49, 189, 81, 17);
 		contentPane.add(usernameLbl);
 
-		usernameComboBox = new JComboBox<>();
 		usernameComboBox.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				String sql = "SELECT * FROM USERNAMES";
-				
-			    try (Connection connection = DBUtil.getConnection();
-			    		PreparedStatement ps = connection.prepareStatement(sql);
-			    		ResultSet rs = ps.executeQuery()) {
-			    	usernames = new HashMap<>();
-			    	model = new DefaultComboBoxModel<>();
-			    	
-			    	while (rs.next()) {
-			    		String username = rs.getString("CITY");
-			    		int id = rs.getInt("ID");
-			    		usernames.put(username, id);
-			    		model.addElement(username);
-			    	}
-			    	usernameComboBox.setModel(model);
-			    	usernameComboBox.setMaximumRowCount(5);
-			    	
+
+				String sql = "SELECT ID, USERNAME FROM USERS";
+
+				try (Connection connection = DBUtil.getConnection();
+					 PreparedStatement ps = connection.prepareStatement(sql);
+					 ResultSet rs = ps.executeQuery(sql)) {
+					usernames = new HashMap<>();
+					usernamesModel = new DefaultComboBoxModel<>();
+
+					while (rs.next()) {
+						String username = rs.getString("USERNAME");
+						int id = rs.getInt("ID");
+						usernames.put(username, id);
+						usernamesModel.addElement(username);
+					}
+					usernameComboBox.setModel(usernamesModel);
+					usernameComboBox.setMaximumRowCount(5);
+
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
-				
+
 			}
 		});
 		usernameComboBox.setBounds(130, 189, 207, 20);
@@ -198,13 +199,13 @@ public class AdminInsertTeachersForm extends JFrame {
 
 					String firstname = firstnameTxt.getText().trim();
 					String lastname = lastnameTxt.getText().trim();
-					String ssn = ssnTxt.getText();
+					Integer ssn = Integer.parseInt(ssnTxt.getText());
 					String speciality = (String) specialityComboBox.getSelectedItem();
 					String username = (String) usernameComboBox.getSelectedItem();
 					Integer specialiyId = specialities.get(speciality);
 					Integer usernameId = usernames.get(username);
 
-					if (firstname == "" || lastname == "" | ssn == "") {
+					if (firstname == "" || lastname == "" | ssn == null) {
 						JOptionPane.showMessageDialog(null, "Please fill firstname / lastname / ssn", "Basic info", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -233,7 +234,7 @@ public class AdminInsertTeachersForm extends JFrame {
 		JButton closeBtn = new JButton("Close");
 		closeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Main.getAdminInsertTeacehrsForm().setVisible(false);
+				Main.getAdminInsertTeachersForm().setVisible(false);
 				Main.getTeachersMenu().setEnabled(true);
 			}
 		});

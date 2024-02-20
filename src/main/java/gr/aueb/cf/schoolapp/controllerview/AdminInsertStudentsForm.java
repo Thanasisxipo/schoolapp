@@ -53,7 +53,7 @@ public class AdminInsertStudentsForm extends JFrame {
 	private JLabel lastnameLbl;
 	private JTextField lastnameTxt;
 	private JLabel genderLbl;
-	private JLabel specialityLbl;
+	private JLabel cityLbl;
 	private JComboBox<String> cityComboBox = new JComboBox<>();
 	private JComboBox<String> usernameComboBox = new JComboBox<>();
 	private Map<String, Integer> cities;
@@ -136,11 +136,11 @@ public class AdminInsertStudentsForm extends JFrame {
 		buttonGroup.add(maleRdBtn);
 		buttonGroup.add(femaleRdBtn);
 		
-		specialityLbl = new JLabel("Πόλη");
-		specialityLbl.setForeground(new Color(128, 0, 0));
-		specialityLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
-		specialityLbl.setBounds(92, 169, 44, 17);
-		contentPane.add(specialityLbl);
+		cityLbl = new JLabel("Πόλη");
+		cityLbl.setForeground(new Color(128, 0, 0));
+		cityLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
+		cityLbl.setBounds(92, 169, 44, 17);
+		contentPane.add(cityLbl);
 
 		
 		cityComboBox.addFocusListener(new FocusAdapter() {

@@ -115,15 +115,16 @@ public class StudentDAOImpl implements IStudentDAO{
         Student student = null;
 
         try (Connection connection = DBUtil.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql);
-        ) {
-            ResultSet rs;
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
+             PreparedStatement ps = connection.prepareStatement(sql);) {
 
-            if (rs.next()) {
-                student = new Student(rs.getInt("ID"), rs.getString("FIRSTNAME"), rs.getString("LASTNAME"), rs.getString("GENDER"), rs.getDate("BIRTH_DATE"), rs.getInt("CITY_ID"), rs.getInt("USER_ID"));
-            }
+                ResultSet rs;
+                ps.setInt(1, id);
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    student = new Student(rs.getInt("ID"), rs.getString("FIRSTNAME"), rs.getString("LASTNAME"), rs.getString("GENDER"), rs.getDate("BIRTH_DATE"), rs.getInt("CITY_ID"), rs.getInt("USER_ID"));
+                }
+
         } catch (SQLException e1) {
             e1.printStackTrace();
             throw new StudentDAOException("SQL Error in finding Student with id: " + id);

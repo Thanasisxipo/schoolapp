@@ -1,7 +1,7 @@
 package gr.aueb.cf.schoolapp.dto;
 
 public class TeacherInsertDTO extends BaseDTO {
-    private String ssn;
+    private Integer ssn;
     private String firstname;
     private String lastname;
     private Integer specialityId;
@@ -10,7 +10,7 @@ public class TeacherInsertDTO extends BaseDTO {
     public TeacherInsertDTO() {
     }
 
-    public TeacherInsertDTO(String ssn, String firstname, String lastname, Integer specialityId, Integer usernameId) {
+    public TeacherInsertDTO(Integer ssn, String firstname, String lastname, Integer specialityId, Integer usernameId) {
         this.ssn = ssn;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -18,11 +18,11 @@ public class TeacherInsertDTO extends BaseDTO {
         this.usernameId = usernameId;
     }
 
-    public String getSsn() {
+    public Integer getSsn() {
         return ssn;
     }
 
-    public void setSsn(String ssn) {
+    public void setSsn(Integer ssn) {
         this.ssn = ssn;
     }
 

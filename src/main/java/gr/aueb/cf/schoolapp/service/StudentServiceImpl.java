@@ -46,7 +46,7 @@ public class StudentServiceImpl implements IStudentService {
             Student existingStudent = Optional.of(studentDAO.getById(student.getId()))
                     .orElseThrow(() -> new StudentNotFoundException("Student not found"));
 
-            return Optional.ofNullable(     studentDAO.update(student))
+            return Optional.ofNullable(studentDAO.update(student))
                     .orElseThrow(() -> new RuntimeException("Runtime exception"));
         } catch (UserDAOException | CityDAOException | ParseException |
                  StudentNotFoundException e) {
@@ -103,7 +103,7 @@ public class StudentServiceImpl implements IStudentService {
     }
 
     private Student map(StudentUpdateDTO dto) throws UserDAOException, CityDAOException, ParseException {
-        return new Student(null, dto.getFirstname(), dto.getLastname(), dto.getGender(), DateUtil.toDate(dto.getBirthDate()), dto.getCityId(), dto.getUsernameId());
+        return new Student(dto.getId(), dto.getFirstname(), dto.getLastname(), dto.getGender(), DateUtil.toDate(dto.getBirthDate()), dto.getCityId(), dto.getUsernameId());
     }
 
 

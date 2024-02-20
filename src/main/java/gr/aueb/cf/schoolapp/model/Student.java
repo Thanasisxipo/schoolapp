@@ -11,9 +11,6 @@ public class Student {
     private Integer cityId;
     private Integer userId;
 
-    public Student() {
-    }
-
     public Student(Integer id, String firstname, String lastname, String gender, Date birthDate, Integer cityId, Integer userId) {
         this.id = id;
         this.firstname = firstname;

@@ -84,7 +84,7 @@ public class TeachersMenu extends JFrame {
 		JButton insertbtn = new JButton("Εισαγωγή");
 		insertbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Main.getAdminInsertTeacehrsForm().setVisible(true);
+				Main.getAdminInsertTeachersForm().setVisible(true);
 				Main.getTeachersMenu().setEnabled(false);
 			}
 		});
@@ -97,6 +97,7 @@ public class TeachersMenu extends JFrame {
 		closeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Main.getAdminMenu().setEnabled(true);
+				Main.getAdminMenu().setVisible(true);
 				Main.getTeachersMenu().setVisible(false);
 			}
 		});

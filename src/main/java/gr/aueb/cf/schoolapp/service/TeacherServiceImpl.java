@@ -100,12 +100,12 @@ public class TeacherServiceImpl implements ITeacherService {
     }
 
     private Teacher map(TeacherInsertDTO dto) throws SpecialityDAOException, UserDAOException {
-            return new Teacher(null ,dto.getFirstname(), dto.getLastname(), Integer.parseInt(dto.getSsn()), dto.getSpecialityId(), dto.getUsernameId());
+            return new Teacher(null ,dto.getFirstname(), dto.getLastname(), dto.getSsn(), dto.getSpecialityId(), dto.getUsernameId());
 
     }
 
     private Teacher map(TeacherUpdateDTO dto) throws SpecialityDAOException, UserDAOException {
-        return new Teacher(null ,dto.getFirstname(), dto.getLastname(), Integer.parseInt(dto.getSsn()), dto.getSpecialityId(), dto.getUsernameId());
+        return new Teacher(null ,dto.getFirstname(), dto.getLastname(), dto.getSsn(), dto.getSpecialityId(), dto.getUsernameId());
     }
 
 //    private Integer specialityId(TeacherInsertDTO dto) throws SpecialityDAOException {
